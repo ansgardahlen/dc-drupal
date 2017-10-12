@@ -2,21 +2,11 @@ version: "3"
 
 services:
 
-#  mariadb:
-#    image: wodby/mariadb:10.1-2.3.3
-#    environment:
-#      MYSQL_ROOT_PASSWORD: password
-#      MYSQL_DATABASE: drupal
-#      MYSQL_USER: drupal
-#      MYSQL_PASSWORD: drupal
-#    volumes:
-#      - ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
-#      - /path/to/mariadb/data/on/host:/var/lib/mysql # I want to manage volumes manually.
-
   drupal-db:
     restart: always
     container_name: dc_drupal-db
-    image: mysql:5.7
+    image: wodby/mariadb:10.1-2.3.3
+#    image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: ${DBROOT}
       MYSQL_DATABASE: ${DBNAME}
@@ -26,6 +16,7 @@ services:
       - ./data/mysql/:/var/lib/mysql
 
   php:
+    restart: always
 # 1. Images with vanilla Drupal – wodby/drupal:[DRUPAL_VERSION]-[PHP_VERSION]-[STABILITY_TAG].
     container_name: dc_drupal-php
     #image: wodby/drupal:8-7.1-2.4.4
@@ -58,14 +49,15 @@ services:
 #      - docker-sync:/var/www/html # Docker-sync
 
   nginx:
+    restart: always
 # wodby/drupal-nginx:[DRUPAL_VERSION]-[NGINX_VERSION]-[STABILITY_TAG].
     container_name: dc_drupal-nginx
-    image: wodby/drupal-nginx:8-1.13-2.4.2
+#    image: wodby/drupal-nginx:8-1.13-2.4.2
 #    image: wodby/drupal-nginx:7-1.13-2.4.2
 #    image: wodby/drupal-nginx:6-1.13-2.4.2
 #    image: wodby/drupal-nginx:8-1.12-2.4.2
 #    image: wodby/drupal-nginx:7-1.12-2.4.2
-#    image: wodby/drupal-nginx:6-1.12-2.4.2
+    image: wodby/drupal-nginx:6-1.12-2.4.2
     depends_on:
       - php
     environment:
